@@ -1,0 +1,81 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <carriers>
+            <Diamix_Correios>
+                <model>Diamix\Correios\Model\Carrier\Correios</model>
+                <active>0</active>
+                <active_frontend>1</active_frontend>
+                <title>Correios</title>
+                <usecontract>0</usecontract>
+                <min_order_value>0</min_order_value>
+                <max_order_value>5000</max_order_value>
+                <weight_unit>kg</weight_unit>
+                <min_order_weight>0</min_order_weight>
+                <max_order_weight>30</max_order_weight>
+                <validate_dimensions>0</validate_dimensions>
+                <dimension_unit>cm</dimension_unit>
+                <standard_height>2</standard_height>
+                <standard_width>11</standard_width>
+                <standard_length>16</standard_length>
+                <delivery_message>em até %d dia(s)</delivery_message>
+                <show_delivery_days>0</show_delivery_days>
+                <add_delivery_days>0</add_delivery_days>
+                <handling_fee>0</handling_fee>
+                <delivery_customer_himself>0</delivery_customer_himself>
+                <delivery_confirmation>0</delivery_confirmation>
+                <declared_value>0</declared_value>
+                <showmethod>0</showmethod>
+                <estimate_quote_box>0</estimate_quote_box>
+                <load_css>0</load_css>
+                <load_jquery>0</load_jquery>
+                <correios_package_format>1</correios_package_format>
+                <volume_coefficient>6000</volume_coefficient>
+                <gateway_limits>
+                    <min_value>0</min_value>
+                    <max_value>10000</max_value>
+                    <min_weight>0</min_weight>
+                    <max_weight>30</max_weight>
+                    <min_height>2</min_height>
+                    <max_height>105</max_height>
+                    <min_width>11</min_width>
+                    <max_width>105</max_width>
+                    <min_length>16</min_length>
+                    <max_length>105</max_length>
+                    <max_sum>200</max_sum>
+                    <min_declared_value>17</min_declared_value>
+                </gateway_limits>
+                <serv_04162>Sedex</serv_04162>
+                <serv_04669>PAC</serv_04669>
+                <serv_40010>Sedex</serv_40010>
+                <serv_41106>PAC</serv_41106>
+                <serv_41068>PAC</serv_41068>
+                <!--serv_41300>PAC GF</serv_41300-->
+                <serv_40096>Sedex</serv_40096>
+                <serv_40215>Sedex 10</serv_40215>
+                <serv_81019>E-Sedex</serv_81019>
+                <serv_40290>Sedex HOJE</serv_40290>
+                <serv_40045>Sedex a Cobrar</serv_40045>
+                <acobrar_code>40045</acobrar_code>
+                <url_ws_correios>http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx?wsdl</url_ws_correios>
+                <url_ws_tracking_correios><![CDATA[http://webservice.correios.com.br/service/rastro/Rastro.wsdl]]></url_ws_tracking_correios>
+                <url_tracking_agenciaideias><![CDATA[http://developers.agenciaideias.com.br/correios/rastreamento/]]></url_tracking_agenciaideias>
+                <ws_timeout>10</ws_timeout>
+                <url_zipcode_verify><![CDATA[http://cep.republicavirtual.com.br/web_cep.php?formato=xml&cep=]]></url_zipcode_verify>
+
+                <die_errors><![CDATA[-33,7,99]]></die_errors>
+                <fake_errors><![CDATA[16,-6,-7,-8,-9,-10,-37,-38,007,008,009,010,011,-888]]></fake_errors>
+                <client_errors><![CDATA[-3]]></client_errors>
+                <store_errors><![CDATA[-1,-2,-4,-5,-11,-12,-13,-14,-15,-16,-17,-18,-20,-22,-23,-24,-25,-26,-27,-28,-29,-30,-31,-32,-34,-35,-36,-39,-40,-41,-42,-43,-44,-45,006]]></store_errors>
+                <die_errors_message>Os Correios estão temporariamente fora de serviço. Por favor, tente novamente em alguns minutos.</die_errors_message>
+                <client_errors_message>Por favor, verifique o CEP digitado.</client_errors_message>
+                <store_errors_message>Houve uma falha ao calcular essa cotação. Por favor, tente novamente em alguns minutos ou entre em contato conosco.</store_errors_message>
+                <sallowspecific>1</sallowspecific>
+                <specificcountry>BR</specificcountry>
+                <type>I</type>
+                <specificerrmsg>This shipping method is currently unavailable.</specificerrmsg>
+                <save_quotes>0</save_quotes>
+            </Diamix_Correios>
+        </carriers>
+    </default>
+</config>

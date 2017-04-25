@@ -1,0 +1,253 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi-noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/system_file.xsd">
+    <system>
+        <section id="carriers" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="Diamix_Correios" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Diamix Correios - Online Quotes Only</label>
+                <comment><![CDATA[This is the free version of <strong>Diamix Correios</strong> module. It includes only online quotes and basic packaging.<br />To get help and buy advanced versions, including offline quotes and smart packaging, visit our site at <a href="http://www.diamix.com.br/correios/magento2" target="_blank">www.diamix.com.br</a>]]></comment>
+                <field id="basic_definition_box_heading" translate="label" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Basic Definition</label>
+                    <frontend_model>\Magento\Config\Block\System\Config\Form\Field\Heading</frontend_model>
+                </field>
+                <field id="active" translate="label" type="select" sortOrder="110" showInDefault="1" canRestore="1">
+                    <label>Enabled</label>
+                    <source_model>\Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <tooltip>If set to yes, this method will be enabled</tooltip>
+                </field>
+                <field id="active_frontend" translate="label" type="select" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Available to Customers?</label>
+                    <source_model>\Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <tooltip>If set to yes, this method will be visible on frontend</tooltip>
+                </field>
+                <field id="title" translate="label" type="text" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Carrier Title</label>
+                    <tooltip>The name that will appear to the customers, on frontend</tooltip>
+                </field>
+                <field id="usecontract" translate="label" type="select" sortOrder="200" showInDefault="1" canRestore="1">
+                    <label>Do you have a contract?</label>
+                    <source_model>\Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <tooltip>If you have a monthly contract with Correios, set to Yes</tooltip>
+                </field>
+                <field id="carrier_username" translate="label" type="text" sortOrder="205" showInDefault="1">
+                    <label>Contract Username</label>
+                    <depends>
+                        <field id="*/*/usecontract">1</field>
+                    </depends>
+                    <tooltip>A sequence of 8 numbers identified as 'Codigo Administrativo'</tooltip>
+                </field>
+                <field id="carrier_password" translate="label" type="text" sortOrder="206" showInDefault="1">
+                    <label>Contract Username</label>
+                    <depends>
+                        <field id="*/*/usecontract">1</field>
+                    </depends>
+                    <tooltip>Usually the four first 4 numbers of your CNPJ</tooltip>
+                </field>
+                <field id="simplemethods" translate="label" type="multiselect" sortOrder="210" showInDefault="1" showInWebsite="1">
+                    <label>Available Methods</label>
+                    <source_model>\Diamix\Correios\Model\Config\Source\Simplemethods</source_model>
+                    <depends>
+                        <field id="*/*/usecontract">0</field>
+                    </depends>
+                    <tooltip>Select the methods you would like to make available to your customers. Hold Ctrl to select more than one.</tooltip>
+                </field>
+                <field id="free_method_simple" translate="label" type="select" sortOrder="211" showInDefault="1" showInWebsite="1">
+                    <label>Free Shipping Method</label>
+                    <frontend_class>free-method</frontend_class>
+                    <source_model>\Diamix\Correios\Model\Config\Source\Freesimplemethods</source_model>
+                    <depends>
+                        <field id="*/*/usecontract">0</field>
+                    </depends>
+                    <tooltip>The method which will be used as Free Method when available. It should be active!</tooltip>
+                </field>
+                <field id="contractmethods" translate="label" type="multiselect" sortOrder="212" showInDefault="1" showInWebsite="1">
+                    <label>Available Methods</label>
+                    <source_model>\Diamix\Correios\Model\Config\Source\Contractmethods</source_model>
+                    <depends>
+                        <field id="*/*/usecontract">1</field>
+                    </depends>
+                    <tooltip>Select the methods you would like to make available to your customers. Hold Ctrl to select more than one.</tooltip>
+                </field>
+                <field id="free_method_contract" translate="label" type="select" sortOrder="213" showInDefault="1" showInWebsite="1">
+                    <label>Free Shipping Method</label>
+                    <frontend_class>free-method</frontend_class>
+                    <source_model>\Diamix\Correios\Model\Config\Source\Freecontractmethods</source_model>
+                    <depends>
+                        <field id="*/*/usecontract">1</field>
+                    </depends>
+                    <tooltip>Define the behaviour to be used with free shipping. If you want to allow only PAC as free shipping method, set Only PAC. To allow smart free shipping when PAC is not available, select First PAC, then Sedex. Desired methods should be active!</tooltip>
+                </field>
+                <field id="show_delivery_days" translate="label" type="select" sortOrder="230" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Show Days to Delivery?</label>
+                    <source_model>\Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <tooltip>Display days until delivery?</tooltip>
+                </field>
+                <field id="delivery_message" translate="label" type="text" sortOrder="235" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Estimate delivery message</label>
+                    <depends>
+                        <field id="*/*/show_delivery_days">1</field>
+                    </depends>
+                    <tooltip>The message to be displayed along estimate days. The tag %d will be replaced by the number of days returned by Correios.</tooltip>
+                </field>
+                <field id="add_delivery_days" translate="label" type="text" sortOrder="236" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Extra Days to Delivery Estimate</label>
+                    <depends>
+                        <field id="*/*/show_delivery_days">1</field>
+                    </depends>
+                    <tooltip>Days to be added to the the quote. Set 0, if you don't want to add extra days.</tooltip>
+                </field>
+                <field id="handling_fee" translate="label" type="select" sortOrder="240" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Add Extra Value to Shipment?</label>
+                    <source_model>\Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <tooltip>Add a handling fee to the quote?</tooltip>
+                </field>
+                <field id="handling_fee_value" translate="label" type="text" sortOrder="245" showInDefault="1" showInWebsite="1" canRestore="1">
+                    <label>Value to be Added</label>
+                    <depends>
+                        <field id="*/*/handling_fee">1</field>
+                    </depends>
+                    <tooltip>Value to be added to the quote.</tooltip>
+                </field>
+                <field id="delivery_customer_himself" translate="label" type="select" sortOrder="250" showInDefault="1" showInWebsite="1" canRestore="1">
+                    <label>Use Correios' Own Handling?</label>
+                    <source_model>\Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <tooltip>Deliver only to the customer himself?</tooltip>
+                </field>
+                <field id="delivery_confirmation" translate="label" type="select" sortOrder="260" showInDefault="1" showInWebsite="1" canRestore="1">
+                    <label>Use Delivery Confirmation Service?</label>
+                    <source_model>\Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <tooltip>Use Delivery Confirmation feature?</tooltip>
+                </field>
+                <field id="declared_value" translate="label" type="select" sortOrder="270" showInDefault="1" showInWebsite="1" canRestore="1">
+                    <label>Use Declared Value Service?</label>
+                    <source_model>\Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <tooltip>Use Declared Value feature?</tooltip>
+                </field>
+                <field id="showmethod" translate="label" type="select" sortOrder="380" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Show Method if Not Applicable</label>
+                    <source_model>\Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <tooltip>Display this method even if it doesn't get a return</tooltip>
+                </field>
+                <field id="sort_order" translate="label" type="text" sortOrder="390" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Sort Order</label>
+                    <tooltip>Order to be displayed on frontend</tooltip>
+                </field>
+                <field id="package_configs_box_heading" translate="label" sortOrder="500" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Quotes Definitions</label>
+                    <frontend_model>\Magento\Config\Block\System\Config\Form\Field\Heading</frontend_model>
+                </field>
+                <field id="min_order_value" translate="label" type="select" sortOrder="510" showInDefault="1" showInWebsite="1" canRestore="1">
+                    <label>Purchase Minimum Value</label>
+                    <tooltip>Purchase Minimum Value to allow this method</tooltip>
+                </field>
+                <field id="max_order_value" translate="label" type="select" sortOrder="520" showInDefault="1" showInWebsite="1" canRestore="1">
+                    <label>Purchase Maximum Value</label>
+                    <tooltip>Purchase Maximum Value to allow this method. Currently, Correios allow shipments up to R$ 10.000,00.</tooltip>
+                </field>
+                <field id="weight_unit" translate="label" type="select" sortOrder="530" showInDefault="1" showInWebsite="1" canRestore="1">
+                    <label>Weight unit</label>
+                    <source_model>\Diamix\Correios\Model\Config\Source\Weightunits</source_model>
+                    <tooltip>Define the weight unit used in your store</tooltip>
+                </field>
+                <field id="min_order_weight" translate="label" type="select" sortOrder="540" showInDefault="1" showInWebsite="1" canRestore="1">
+                    <label>Purchase Minimum Weight</label>
+                    <tooltip>Purchase Minimum Weight to allow this method (same unit as defined above)</tooltip>
+                </field>
+                <field id="max_order_weight" translate="label" type="select" sortOrder="550" showInDefault="1" showInWebsite="1" canRestore="1">
+                    <label>Purchase Maximum Weight</label>
+                    <tooltip>Purchase Maximum Weight to allow this method (same unit as defined above)</tooltip>
+                </field>
+                <field id="validate_dimensions" translate="label" type="select" sortOrder="560" showInDefault="1" showInWebsite="1" canRestore="1">
+                    <label>Use Product Dimensions</label>
+                    <source_model>\Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <tooltip>If you want to fully skip product dimensions validate, set this to No.</tooltip>
+                </field>
+                <field id="dimension_unit" translate="label" type="select" sortOrder="570" showInDefault="1" showInWebsite="1" canRestore="1">
+                    <label>Dimension unit</label>
+                    <source_model>\Diamix\Correios\Model\Config\Source\Dimensionunits</source_model>
+                    <depends>
+                        <field id="*/*/validate_dimensions">1</field>
+                    </depends>
+                    <tooltip>Define the dimension unit for your store, which is used on custom product attributes</tooltip>
+                </field>
+                <field id="standard_height" translate="label" type="text" sortOrder="580" showInDefault="1" showInWebsite="1" canRestore="1">
+                    <label>Standard Height</label>
+                    <depends>
+                        <field id="*/*/validate_dimensions">1</field>
+                    </depends>
+                    <tooltip>This is used when products do not have their own measures. Use the same unit defined above. According to Correios, minimum height is equal to 2 cm and maximum height is equal to 105 cm.</tooltip>
+                </field>
+                <field id="attribute_height" translate="label" type="select" sortOrder="590" showInDefault="1" showInWebsite="1">
+                    <label>Height attribute</label>
+                    <!--source_model>\Diamix\Correios\Model\Config\Source\Productattributes</source_model-->
+                    <depends>
+                        <field id="*/*/validate_dimensions">1</field>
+                    </depends>
+                    <tooltip>Choose the attribute to be used to get product height</tooltip>
+                </field>
+                <field id="standard_width" translate="label" type="text" sortOrder="600" showInDefault="1" showInWebsite="1" canRestore="1">
+                    <label>Standard Width</label>
+                    <depends>
+                        <field id="*/*/validate_dimensions">1</field>
+                    </depends>
+                    <tooltip>This is used when products do not have their own measures. Use the same unit defined above. According to Correios, minimum width is equal to 11 cm and maximum width is equal to 105 cm.</tooltip>
+                </field>
+                <field id="attribute_width" translate="label" type="select" sortOrder="610" showInDefault="1" showInWebsite="1">
+                    <label>Width attribute</label>
+                    <!--source_model>\Diamix\Correios\Model\Config\Source\Productattributes</source_model-->
+                    <depends>
+                        <field id="*/*/validate_dimensions">1</field>
+                    </depends>
+                    <tooltip>Choose the attribute to be used to get product width</tooltip>
+                </field>
+                <field id="standard_length" translate="label" type="text" sortOrder="620" showInDefault="1" showInWebsite="1" canRestore="1">
+                    <label>Standard Length</label>
+                    <depends>
+                        <field id="*/*/validate_dimensions">1</field>
+                    </depends>
+                    <tooltip>This is used when products do not have their own measures. Use the same unit defined above. According to Correios, minimum length is equal to 16 cm and maximum length is equal to 105 cm.</tooltip>
+                </field>
+                <field id="attribute_length" translate="label" type="select" sortOrder="630" showInDefault="1" showInWebsite="1">
+                    <label>Length attribute</label>
+                    <!--source_model>\Diamix\Correios\Model\Config\Source\Productattributes</source_model-->
+                    <depends>
+                        <field id="*/*/validate_dimensions">1</field>
+                    </depends>
+                    <tooltip>Choose the attribute to be used to get product length</tooltip>
+                </field>
+                <field id="tracking_heading" translate="label" sortOrder="700" showInDefault="1" showInWebsite="1">
+                    <label>Quotes Definitions</label>
+                    <frontend_model>\Magento\Config\Block\System\Config\Form\Field\Heading</frontend_model>
+                </field>
+                <field id="tracking_source" translate="label" type="select" sortOrder="710" showInDefault="1" showInWebsite="1">
+                    <label>Tracking Source</label>
+                    <source_model>\Diamix\Correios\Model\Config\Source\Trackingsources</source_model>
+                    <tooltip>Tracking source to be used to get shipment data</tooltip>
+                </field>
+                <field id="estimate_quote_box_heading" translate="label" sortOrder="800" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Estimate on Product Page</label>
+                    <frontend_model>\Magento\Config\Block\System\Config\Form\Field\Heading</frontend_model>
+                </field>
+                <field id="estimate_quote_box" translate="label" type="select" sortOrder="810" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Show estimate box on product page</label>
+                    <source_model>\Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <tooltip>Show a box to get estimates on product page?</tooltip>
+                </field>
+                <field id="load_css" translate="label" type="select" sortOrder="820" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Load module CSS</label>
+                    <source_model>\Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <tooltip>Load module original CSS. If you use your custom CSS, you can disable this and save resources</tooltip>
+                </field>
+                <field id="load_jquery" translate="label" type="select" sortOrder="830" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Load jQuery</label>
+                    <source_model>\Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <tooltip>If your theme is already using jQuery, set this to No.</tooltip>
+                </field>
+                <field id="use_mask" translate="label" type="select" sortOrder="840" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Use Mask</label>
+                    <source_model>\Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <tooltip>Displays a mask for postcode, like 00000-000.</tooltip>
+                </field>                
+            </group>
+        </section>
+    </system>
+</config>
