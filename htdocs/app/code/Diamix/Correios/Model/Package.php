@@ -3,7 +3,7 @@
  * Diamix_Correios Module
  */
 
-namespace Diamix\Correio\Model;
+namespace Diamix\Correios\Model;
 
 /**
  * Package Model

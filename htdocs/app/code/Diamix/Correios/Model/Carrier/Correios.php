@@ -6,6 +6,7 @@ namespace Diamix\Correios\Model\Carrier;
 
 use Diamix\Correios\Helper\Data;
 use Diamix\Correios\Model\Package;
+use Magento\Catalog\Model\ProductFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Quote\Model\Quote\Address\RateRequest;
 use Magento\Quote\Model\Quote\Address\RateResult\Error;
@@ -14,6 +15,9 @@ use Magento\Quote\Model\Quote\Address\RateResult\Method;
 use Magento\Quote\Model\Quote\Address\RateResult\MethodFactory;
 use Magento\Shipping\Model\Rate\Result;
 use Magento\Shipping\Model\Rate\ResultFactory;
+use Magento\Shipping\Model\Tracking\ResultFactory as TrackingFactory;
+use Magento\Shipping\Model\Tracking\Result\ErrorFactory as TrackingErrorFactory;
+use Magento\Shipping\Model\Tracking\Result\StatusFactory as TrackingStatusFactory;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -24,6 +28,8 @@ use Psr\Log\LoggerInterface;
  * @category Shipping
  * @package Diamix_Correios
  * @license GNU General Public License, version 3
+ * @todo Tracking methods must be well tested
+ * @todo Correios error checking and validation
  */
 class Correios extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements \Magento\Shipping\Model\Carrier\CarrierInterface
 {
@@ -79,12 +85,19 @@ class Correios extends \Magento\Shipping\Model\Carrier\AbstractCarrier implement
         LoggerInterface $logger,
         ResultFactory $rateResultFactory,
         MethodFactory $rateMethodFactory,
+        ProductFactory $productFactory,
+        TrackingFactory $trackFactory,
+        TrackingErrorFactory $trackErrorFactory,
+        TrackingStatusFactory $trackStatusFactory,
         Data $helper,
         array $data = []
-    )
-    {
+    ) {
         $this->rateResultFactory = $rateResultFactory;
         $this->rateMethodFactory = $rateMethodFactory;
+        $this->productFactory = $productFactory;
+        $this->trackFactory = $trackFactory;
+        $this->trackErrorFactory = $trackErrorFactory;
+        $this->trackStatusFactory = $trackStatusFactory;
         $this->helper = $helper;
         parent::__construct($scopeConfig, $rateErrorFactory, $logger, $data);
     }
@@ -105,7 +118,6 @@ class Correios extends \Magento\Shipping\Model\Carrier\AbstractCarrier implement
      * Receives shipping request and process it. If there are quotes, return them. Else, return false.
      * @param Magento\Quote\Model\Quote\Address\RateRequest $request
      * @return array|bool
-     * @todo test and improve it
      */
     public function collectRates(RateRequest $request)
     {
@@ -113,23 +125,18 @@ class Correios extends \Magento\Shipping\Model\Carrier\AbstractCarrier implement
         if (!$this->getConfigFlag('active')) {
             return false;
         }
+        
         // prepare items object according to environment
         if (!$this->helper->verifyIfIsAdmin()) {
             // quote on frontend
             if ($this->helper->getConfigValue('active_frontend') == 1) {
-                // there are two ways to get products to quote. The first one is to get product data from the cart, but this can not be used on product page estimates, specially if the cart is empty. This form was kept here for future reference
-                //$items = Mage::getModel('checkout/cart')->getQuote()->getAllVisibleItems();
-                
-                // the second way uses quote request object but requires further verification, to split off products different from simple ones, i.e., products that are not shipped
                 $items = $request->getAllItems();
             } else {
                 return false;
             }
         } else {
             // quote on backend
-            $this->_logger->info('TODO, backend quote');
-            return false;
-            //$items = Mage::getSingleton('adminhtml/session_quote')->getQuote()->getAllVisibleItems();
+            $items = $request->getAllItems();
         }
         
         // perform initial validation
@@ -150,7 +157,6 @@ class Correios extends \Magento\Shipping\Model\Carrier\AbstractCarrier implement
         
         // get allowed methods, passing free shipping if allowed
         $this->getQuotes($packages, $request->getFreeShipping());
-        
         return $this->_result;
     }
     
@@ -163,7 +169,7 @@ class Correios extends \Magento\Shipping\Model\Carrier\AbstractCarrier implement
     protected function performInitialValidation(RateRequest $request)
     {
         // verify sender and receiver countries as 'BR'
-        $senderCountry = $this->scopeConfig->getValue('shipping/origin/country_id', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $senderCountry = $this->_scopeConfig->getValue('shipping/origin/country_id', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         
         if (!$this->helper->verifyIfIsAdmin()) {
             // quote on frontend
@@ -177,12 +183,13 @@ class Correios extends \Magento\Shipping\Model\Carrier\AbstractCarrier implement
             $this->_logger->info('Diamix_Correios: This method is active but default store country is not set to Brazil');
             return false;
         }
+        
         if ($receiverCountry != 'BR') {
             return false;
         }
         
         // prepare postcodes and verify them
-        $this->fromZip = $this->helper->sanitizePostcode($this->scopeConfig->getValue('shipping/origin/postcode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
+        $this->fromZip = $this->helper->sanitizePostcode($this->_scopeConfig->getValue('shipping/origin/postcode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
         $this->toZip = $this->helper->sanitizePostcode($request->getDestPostcode());
         if (!preg_match("/^([0-9]{8})$/", $this->fromZip) || !preg_match("/^([0-9]{8})$/", $this->toZip)) {
             return false;
@@ -277,9 +284,11 @@ class Correios extends \Magento\Shipping\Model\Carrier\AbstractCarrier implement
             
             for ($i = 0; $i < $qty; $i++) {
                 // set item dimensions; if the custom dimension is less than minimum, use standard; if greater than maximum, log and return false for the whole quote
+                $product = $this->productFactory->create()->load($_product->getId());
+                
                 // set item height
                 if ($heightCode) {
-                    $itemHeight = Mage::getResourceModel('catalog/product')->getAttributeRawValue($_product->getId(), $heightCode, $this->getStore()) ? Mage::getResourceModel('catalog/product')->getAttributeRawValue($_product->getId(), $heightCode, $this->getStore()) : $this->helper->getConfigValue('standard_height');
+                    $itemHeight = $product->getData($heightCode) ? $product->getData($heightCode) : $this->helper->getConfigValue('standard_height');
                     
                     // convert to centimeter, if needed
                     if ($this->helper->getConfigValue('dimension_unit') != 'cm') {
@@ -299,7 +308,7 @@ class Correios extends \Magento\Shipping\Model\Carrier\AbstractCarrier implement
                 
                 // set item width
                 if ($widthCode) {
-                    $itemWidth = Mage::getResourceModel('catalog/product')->getAttributeRawValue($_product->getId(), $widthCode, $this->getStore()) ? Mage::getResourceModel('catalog/product')->getAttributeRawValue($_product->getId(), $widthCode, $this->getStore()) : $this->helper->getConfigValue('standard_width');
+                    $itemWidth = $product->getData($widthCode) ? $product->getData($widthCode) : $this->helper->getConfigValue('standard_height');
                     
                     // convert to centimeter, if needed
                     if ($this->helper->getConfigValue('dimension_unit') != 'cm') {
@@ -319,7 +328,7 @@ class Correios extends \Magento\Shipping\Model\Carrier\AbstractCarrier implement
                 
                 // set item length
                 if ($lengthCode) {
-                    $itemLength = Mage::getResourceModel('catalog/product')->getAttributeRawValue($_product->getId(), $lengthCode, $this->getStore()) ? Mage::getResourceModel('catalog/product')->getAttributeRawValue($_product->getId(), $lengthCode, $this->getStore()) : $this->helper->getConfigValue('standard_length');
+                    $itemLength = $product->getData($lengthCode) ? $product->getData($lengthCode) : $this->helper->getConfigValue('standard_height');
                     
                     // convert to centimeter, if needed
                     if ($this->helper->getConfigValue('dimension_unit') != 'cm') {
@@ -410,9 +419,7 @@ class Correios extends \Magento\Shipping\Model\Carrier\AbstractCarrier implement
      * @return array
      */
     protected function getQuotes($packages, $freeShipping = false)
-    {
-        $this->helper = $this->helper;
-        
+    {        
         // get services
         if ($this->helper->getConfigValue('usecontract') == 1) {
             $services = $this->helper->getConfigValue('contractmethods');
@@ -449,7 +456,7 @@ class Correios extends \Magento\Shipping\Model\Carrier\AbstractCarrier implement
             $quoteRequest = $this->processGatewayRequest($params);
             
             if (!$quoteRequest) {
-                $this->_logger->info('Diamix_Correios: There was an error when getting a quote for a package with following data. Weight: ' . $package->getWeight() . ', length: ' . $package->getLength() . ', width: ' . $package->getWidth() . ', height: ' . $package->getHeight(), ', value: ' . $package->getValue());
+                $this->_logger->info('Diamix_Correios: There was an error when getting a quote for a package with following data. Weight: ' . $package->getWeight() . ', length: ' . $package->getLength() . ', width: ' . $package->getWidth() . ', height: ' . $package->getHeight() . ', value: ' . $package->getValue());
                 return $this->_result;
             }
             
@@ -509,7 +516,7 @@ class Correios extends \Magento\Shipping\Model\Carrier\AbstractCarrier implement
     protected function appendShippingReturn($shippingMethod, $shippingTitle, $shippingCost = 0, $shippingDelivery = 0, $freeShipping = false)
     {
         // preparing and populating the shipping method
-        $method = $this->_rateMethodFactory->create();
+        $method = $this->rateMethodFactory->create();
         $method->setCarrier($this->_code);
         $method->setCarrierTitle($this->helper->getConfigValue('title'));
         $method->setMethod($shippingMethod);
@@ -556,27 +563,16 @@ class Correios extends \Magento\Shipping\Model\Carrier\AbstractCarrier implement
      * 
      * Method to be triggered when a tracking info is requested.
      * @param array $trackings Trackings
-     * @return Mage_Shipping_Model_Tracking_Result
-     * @todo
+     * @return \Magento\Shipping\Model\Tracking\ResultFactory
      */
     public function getTrackingInfo($trackings)
     {
         // instatiate the object and get tracking results
-        //$this->_result = Mage::getModel('shipping/tracking_result');
-//        foreach ((array) $trackings as $trackingCode) {
-//            $this->requestTrackingInfo($trackingCode);
-//        }
-//        
-//        // check results
-//        if ($this->_result instanceof Mage_Shipping_Model_Tracking_Result){
-//            if ($trackings = $this->_result->getAllTrackings()) {
-//                return $trackings[0];
-//            }
-//        } elseif (is_string($this->_result) && !empty($this->_result)) {
-//            return $this->_result;
-//        } else {
-//            return false;
-//        }
+        $this->_result = $this->trackFactory->create();
+        foreach ((array) $trackings as $trackingCode) {
+            $this->requestTrackingInfo($trackingCode);
+        }
+        return $this->_result;
     }
     
     /**
@@ -585,31 +581,29 @@ class Correios extends \Magento\Shipping\Model\Carrier\AbstractCarrier implement
      * Get data from the API regarding tracking code
      * @param string $trackingCode Tracking code
      * @return bool
-     * @todo
      */
     protected function requestTrackingInfo($trackingCode)
     {
         // prepare data to connect to API
-        //$data = array(
-//            'tracking_code' => $trackingCode,
-//        );
-//        $trackingRequest = $this->processGatewayTrackingRequest($data);
-//        
-//        if (!$trackingRequest) {
-//            return false;
-//        }
-//
-//        $track = $trackingRequest;
-//        $track['progressdetail'] = $trackingRequest;
-//
-//        $tracking = Mage::getModel('shipping/tracking_result_status');
-//        $tracking->setTracking($trackingCode);
-//        $tracking->setCarrier($this->_code);
-//        $tracking->setCarrierTitle($this->getConfigData('title'));
-//        $tracking->addData($track);
-//
-//        $this->_result->append($tracking);
-//        return true;
+        $data = array(
+            'tracking_code' => $trackingCode,
+        );
+        $trackingRequest = $this->processGatewayTrackingRequest($data);
+        
+        if (!$trackingRequest) {
+            return false;
+        }
+        
+        $track = $trackingRequest;
+        $track['progressdetail'] = $trackingRequest;
+        $tracking = $this->trackStatusFactory->create();
+        $tracking->setTracking($trackingCode);
+        $tracking->setCarrier($this->_code);
+        $tracking->setCarrierTitle($this->getConfigData('title'));
+        $tracking->addData($track);
+        
+        $this->_result->append($tracking);
+        return true;
     }
     
     /**
@@ -688,7 +682,7 @@ class Correios extends \Magento\Shipping\Model\Carrier\AbstractCarrier implement
         
         // connect to Correios and verify if there are errors
         try {
-            $ws = new SoapClient($url, array('connection_timeout' => $this->helper->getConfigValue('ws_timeout')));
+            $ws = new \SoapClient($url, array('connection_timeout' => $this->helper->getConfigValue('ws_timeout')));
         } catch(Exception $e){
             if ($logger) {
                 $this->_logger->info('Diamix_Correios: Error when connecting to Correios webserver: ' . $e->getMessage());
@@ -791,11 +785,10 @@ class Correios extends \Magento\Shipping\Model\Carrier\AbstractCarrier implement
      * Process Gateway Tracking Request
      * 
      * Connects to Correios' webserver for tracking and process return.
-     * @param array $params Params to perform the quote {services, zipFrom, zipTo, weight, height, width, length, value}
+     * @param array $params Params to perform the tracking {tracking_code}
      * @param boolean $logger Log errors
      * @return array
      * @see https://www.correios.com.br/para-voce/correios-de-a-a-z/pdf/rastreamento-de-objetos/manual_rastreamentoobjetosws.pdf    Guia técnico para implementação do Rastreamento de Objetos via WebService / SOAP
-     * @todo only converted, not tested
      */
     protected function processGatewayTrackingRequest($params, $logger = true)
     {
@@ -834,7 +827,7 @@ class Correios extends \Magento\Shipping\Model\Carrier\AbstractCarrier implement
         
         // connect to Correios and verify if there are errors
         try {
-            $ws = new SoapClient($url, array('connection_timeout' => $this->helper->getConfigValue('ws_timeout')));
+            $ws = new \SoapClient($url, array('connection_timeout' => $this->helper->getConfigValue('ws_timeout')));
         } catch(Exception $e){
             if ($logger) {
                 $this->_logger->info('Diamix_Correios: Error when connecting to Correios tracking webserver: ' . $e->getMessage());
@@ -857,7 +850,7 @@ class Correios extends \Magento\Shipping\Model\Carrier\AbstractCarrier implement
         $trackingResult = array();
         
         foreach ($trackingData->evento as $event) {
-            $date = new Zend_Date($event->data, 'dd/mm/YYYY');
+            $date = new \Zend_Date($event->data, 'dd/mm/YYYY');
             $tempArray = array(
                 'deliverydate' => $date->toString('YYYY-mm-dd'),
                 'deliverytime' => $event->hora,
@@ -926,15 +919,14 @@ class Correios extends \Magento\Shipping\Model\Carrier\AbstractCarrier implement
      * 
      * @param string $errorMessage The error message
      * @return boolean
-     * @todo
      */
     public function appendError($errorMessage)
     {
-        //$error = Mage::getModel('shipping/rate_result_error');
-//        $error->setCarrier($this->_code);
-//        $error->setCarrierTitle($this->helper->getConfigValue('title'));
-//        $error->setErrorMessage($errorMessage);
-//        $this->_result->append($error);
-//        return true;
+        $error = $this->_rateErrorFactory->create();
+        $error->setCarrier($this->_code);
+        $error->setCarrierTitle($this->helper->getConfigValue('title'));
+        $error->setErrorMessage($errorMessage);
+        $this->_result->append($error);
+        return true;
     }
 }

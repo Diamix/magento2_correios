@@ -6,10 +6,10 @@ Este módulo conecta lojas Magento ao serviço de cotações dos Correios, obten
 
 ## Installation / Instalação
 
-To install this module, simply copy the files to your store root folder. You may copy the files included on the folder /app/design/frontend/default/default to the correspondent folder of your theme, like /app/design/frontend/YOURTHEME/default. The same should apply to the files included on /skin/frontend.
+To install this module, simply copy the files to your store root folder. You may have to adapt the frontend files to your theme.
 If you have a monthly contract with Correios, you can inform your access data on the configuration screen and select all desired configs.
 
-Para instalá-lo, basta copiar os arquivos em sua loja Magento. Talvez seja necessário copiar os arquivos da pasta /app/design/frontend/default/default para a pasta correspondente à seu tema, como /app/design/frontend/MEUTEMA/default. O mesmo vale para os arquivos da pasta /skin/frontend.
+Para instalá-lo, basta copiar os arquivos em sua loja Magento. Talvez seja necessário adequar os arquivos de frontend para seu tema.
 Se você tem um contrato mensal com os Correios, você pode informar seus dados de acesso na tela de configuração e selecionar as configurações desejadas.
 
 ### Pre requisites / Pré requisitos

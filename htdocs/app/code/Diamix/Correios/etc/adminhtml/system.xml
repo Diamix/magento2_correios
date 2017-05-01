@@ -36,7 +36,7 @@
                     <tooltip>A sequence of 8 numbers identified as 'Codigo Administrativo'</tooltip>
                 </field>
                 <field id="carrier_password" translate="label" type="text" sortOrder="206" showInDefault="1">
-                    <label>Contract Username</label>
+                    <label>Contract Password</label>
                     <depends>
                         <field id="*/*/usecontract">1</field>
                     </depends>
@@ -176,13 +176,14 @@
                     </depends>
                     <tooltip>This is used when products do not have their own measures. Use the same unit defined above. According to Correios, minimum height is equal to 2 cm and maximum height is equal to 105 cm.</tooltip>
                 </field>
-                <field id="attribute_height" translate="label" type="select" sortOrder="590" showInDefault="1" showInWebsite="1">
+                <field id="attribute_height" translate="label" type="text" sortOrder="590" showInDefault="1" showInWebsite="1">
                     <label>Height attribute</label>
                     <!--source_model>\Diamix\Correios\Model\Config\Source\Productattributes</source_model-->
                     <depends>
                         <field id="*/*/validate_dimensions">1</field>
                     </depends>
-                    <tooltip>Choose the attribute to be used to get product height</tooltip>
+                    <tooltip>Inform the code of the attribute to be used to get product height</tooltip>
+                    <!--tooltip>Choose the attribute to be used to get product height</tooltip-->
                 </field>
                 <field id="standard_width" translate="label" type="text" sortOrder="600" showInDefault="1" showInWebsite="1" canRestore="1">
                     <label>Standard Width</label>
@@ -191,13 +192,14 @@
                     </depends>
                     <tooltip>This is used when products do not have their own measures. Use the same unit defined above. According to Correios, minimum width is equal to 11 cm and maximum width is equal to 105 cm.</tooltip>
                 </field>
-                <field id="attribute_width" translate="label" type="select" sortOrder="610" showInDefault="1" showInWebsite="1">
+                <field id="attribute_width" translate="label" type="text" sortOrder="610" showInDefault="1" showInWebsite="1">
                     <label>Width attribute</label>
                     <!--source_model>\Diamix\Correios\Model\Config\Source\Productattributes</source_model-->
                     <depends>
                         <field id="*/*/validate_dimensions">1</field>
                     </depends>
-                    <tooltip>Choose the attribute to be used to get product width</tooltip>
+                    <tooltip>Inform the code of the attribute to be used to get product width</tooltip>
+                    <!--tooltip>Choose the attribute to be used to get product width</tooltip-->
                 </field>
                 <field id="standard_length" translate="label" type="text" sortOrder="620" showInDefault="1" showInWebsite="1" canRestore="1">
                     <label>Standard Length</label>
@@ -206,13 +208,14 @@
                     </depends>
                     <tooltip>This is used when products do not have their own measures. Use the same unit defined above. According to Correios, minimum length is equal to 16 cm and maximum length is equal to 105 cm.</tooltip>
                 </field>
-                <field id="attribute_length" translate="label" type="select" sortOrder="630" showInDefault="1" showInWebsite="1">
+                <field id="attribute_length" translate="label" type="text" sortOrder="630" showInDefault="1" showInWebsite="1">
                     <label>Length attribute</label>
                     <!--source_model>\Diamix\Correios\Model\Config\Source\Productattributes</source_model-->
                     <depends>
                         <field id="*/*/validate_dimensions">1</field>
                     </depends>
-                    <tooltip>Choose the attribute to be used to get product length</tooltip>
+                    <tooltip>Inform the code of the attribute to be used to get product length</tooltip>
+                    <!--tooltip>Choose the attribute to be used to get product length</tooltip-->
                 </field>
                 <field id="tracking_heading" translate="label" sortOrder="700" showInDefault="1" showInWebsite="1">
                     <label>Quotes Definitions</label>
@@ -223,7 +226,7 @@
                     <source_model>\Diamix\Correios\Model\Config\Source\Trackingsources</source_model>
                     <tooltip>Tracking source to be used to get shipment data</tooltip>
                 </field>
-                <field id="estimate_quote_box_heading" translate="label" sortOrder="800" showInDefault="1" showInWebsite="1" showInStore="1">
+                <!--field id="estimate_quote_box_heading" translate="label" sortOrder="800" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Estimate on Product Page</label>
                     <frontend_model>\Magento\Config\Block\System\Config\Form\Field\Heading</frontend_model>
                 </field>
@@ -246,7 +249,7 @@
                     <label>Use Mask</label>
                     <source_model>\Magento\Config\Model\Config\Source\Yesno</source_model>
                     <tooltip>Displays a mask for postcode, like 00000-000.</tooltip>
-                </field>                
+                </field-->                
             </group>
         </section>
     </system>

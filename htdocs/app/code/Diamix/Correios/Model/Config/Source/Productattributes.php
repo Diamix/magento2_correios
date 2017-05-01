@@ -23,7 +23,7 @@ class Productattributes implements \Magento\Framework\Option\ArrayInterface
      */
      public function __construct(ObjectManagerInterface $interface)
      {
-        $this->objectManager = $interface;
+        $this->_objectManager = $interface;
      }
      
     /**
@@ -35,15 +35,15 @@ class Productattributes implements \Magento\Framework\Option\ArrayInterface
      */
     public function toOptionArray()
     {
-        $productAttributes = $this->objectManager->get('Magento\Catalog\Model\Attribute')->getCollection();
-        
+        $productAttributes = $this->_objectManager->get('Magento\Catalog\Model\Product')->getAttributes();
+
         $array = array(
             array(
                 'value' => 'none',
                 'label' => __('No attribute selected'),
             )
         );
-        foreach ($productAttributes as $value => $label) {
+        foreach ($productAttributes as $pa) {
             //if ($pa->getIsUserDefined() == 1) {
                 $option = array(
                     'value' => $value,

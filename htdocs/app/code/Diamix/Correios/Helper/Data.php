@@ -32,7 +32,6 @@ class Data extends AbstractHelper
     {
         $this->_scopeConfig = $scopeConfig;
         $this->_logger = $logger;
-        $this->_logger->info('helper data');
         parent::__construct($context);
     }
     
@@ -54,10 +53,9 @@ class Data extends AbstractHelper
      */
     public function verifyIfIsAdmin()
     {
-        $om = Magento\App\ObjectManager::getInstance();
-        $app_state  = $om->get('Magento\App\State');
-        $area_code  = $app_state->getAreaCode();
-        if ($app_state->getAreaCode() == \Magento\Backend\App\Area\FrontNameResolver::AREA_CODE) {
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $appState = $objectManager->get('Magento\Framework\App\State');
+        if ($appState->getAreaCode() == \Magento\Backend\App\Area\FrontNameResolver::AREA_CODE) {
             return true;
         }
         return false;

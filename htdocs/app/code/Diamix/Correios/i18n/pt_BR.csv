@@ -91,3 +91,6 @@
 "Pay on delivery:", "Pagamento na entrega:"
 "Only PAC", "Somente PAC"
 "First PAC, then Sedex", "Primeiro PAC, depois Sedex"
+"Inform the code of the attribute to be used to get product height", "Digite o código do atributo que será usado para obter a altura do produto"
+"Inform the code of the attribute to be used to get product width", "Digite o código do atributo que será usado para obter a largura do produto"
+"Inform the code of the attribute to be used to get product lenght", "Digite o código do atributo que será usado para obter o comprimento do produto"
