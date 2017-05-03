@@ -1,0 +1,46 @@
+.estimate-box {
+    width: 100%;
+    margin: 10px 0 0;
+    padding: 10px 15px 15px;
+    border: 1px solid #cccccc;
+    clear: both;
+    position: relative;
+}
+
+.sr-only {
+    display: none;
+}
+
+#buttonQuote {
+    margin-top: 10px;
+}
+
+.btn-quote {
+    background: #3399cc;
+    display: inline-block;
+    padding: 7px 15px;
+    border: 0;
+    color: #FFFFFF;
+    font-size: 13px;
+    font-weight: normal;
+    font-family: "Raleway", "Helvetica Neue", Verdana, Arial, sans-serif;
+    line-height: 19px;
+    text-align: center;
+    text-transform: uppercase;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.quote-results-box {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dotted #cccccc;
+}
+
+.quote-results-box dt {
+    font-weight: bold;
+    line-height: 1.3em;
+}
+.quote-results-box li {
+    margin-left: 25px;
+}

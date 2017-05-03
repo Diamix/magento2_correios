@@ -226,7 +226,7 @@
                     <source_model>\Diamix\Correios\Model\Config\Source\Trackingsources</source_model>
                     <tooltip>Tracking source to be used to get shipment data</tooltip>
                 </field>
-                <!--field id="estimate_quote_box_heading" translate="label" sortOrder="800" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="estimate_quote_box_heading" translate="label" sortOrder="800" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Estimate on Product Page</label>
                     <frontend_model>\Magento\Config\Block\System\Config\Form\Field\Heading</frontend_model>
                 </field>
@@ -249,7 +249,7 @@
                     <label>Use Mask</label>
                     <source_model>\Magento\Config\Model\Config\Source\Yesno</source_model>
                     <tooltip>Displays a mask for postcode, like 00000-000.</tooltip>
-                </field-->                
+                </field>                
             </group>
         </section>
     </system>

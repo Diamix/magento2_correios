@@ -1,0 +1,50 @@
+<?php
+/**
+ * Diamix_Correios Module
+ */
+
+/**
+ * Product Quote
+ * 
+ * Contains the block for estimate quote on product page.
+ * @version 0.1
+ * @category Shipping
+ * @package Diamix_Correios
+ * @license GNU General Public License, version 3
+ */
+?>
+<?php if ($this->showBox()) : ?>
+<div id="estimateBox" class="estimate-box col-xs-12">
+    <div class="widget">
+        <div class="widget-header">
+            <h2><?php echo __('Estimate Shipping'); ?></h2>
+        </div>
+        <div class="widget-content">
+            <form id="estimateQuote" class="form-inline">
+                <input type="hidden" id="quoteUrl" name="quoteUrl" value="<?php //echo $this->getUrl('diamix_correios/quote'); ?>" />
+                <input type="hidden" id="productType" name="productType" value="<?php //echo $this->getProduct()->getTypeId(); ?>" />
+                <input type="hidden" id="currentProduct" name="currentProduct" value="<?php //echo $this->getProduct()->getId(); ?>" />
+                <div class="input-group">
+                    <label for="postcode" class="sr-only"><?php echo __('Postcode'); ?></label>
+                    <input id="postcode" type="text" name="postcode" class="form-control input-text" placeholder="<?php echo __('Postcode'); ?>" />
+                    <?php /*if (Mage::helper('Diamix_Correios')->getConfigValue('use_mask') == 1) : ?>
+                    <script type="text/javascript">
+                    new MaskedInput('#postcode', '99999-999');
+                    </script>
+                    <?php endif; */ ?>
+                </div>
+                <div id="buttonQuote" class="input-group">
+                    <button type="button" id="estimateQuoteSubmit" title="<?php echo __('Quote'); ?>" class="button btn-quote" onclick="getQuote()">
+                        <span>
+                            <span><?php echo __('Quote'); ?></span>
+                        </span>
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="widget quote-results-box" id="quoteResultsBox" style="display: none;">
+    </div>
+</div>
+<?php endif; ?>
