@@ -202,6 +202,7 @@ class Correios extends \Magento\Shipping\Model\Carrier\AbstractCarrier implement
         }
         $minWeight = $this->helper->getConfigValue('min_order_weight') ? $this->helper->getConfigValue('min_order_weight') : $this->helper->getConfigValue('gateway_limits/min_weight');
         $maxWeight = $this->helper->getConfigValue('max_order_weight') ? $this->helper->getConfigValue('max_order_weight') : $this->helper->getConfigValue('gateway_limits/max_weight');
+
         if ($this->packageWeight < $minWeight || $this->packageWeight > $maxWeight) {
             return false;
         }

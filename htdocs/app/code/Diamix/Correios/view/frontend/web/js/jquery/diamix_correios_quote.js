@@ -1,25 +1,25 @@
     /* Diamix_Correios: JS for getting quotes, on product page */
     
     function getQuote() {
-        $j('#quoteResultsBox').html('').hide();
-        $j('#estimateQuoteSubmit').attr('disabled', true);
-        var url = $j('#quoteUrl').val();
-        var postcode = $j('#postcode').val();
-        var qty = $j('#qty').val();
-        var productType = $j('#productType').val();
+        $('#quoteResultsBox').html('').hide();
+        $('#estimateQuoteSubmit').attr('disabled', true);
+        var url = $('#quoteUrl').val();
+        var postcode = $('#postcode').val();
+        var qty = $('#qty').val();
+        var productType = $('#productType').val();
         
         if (productType == 'configurable') {
             var productId = spConfig.getIdOfSelectedProduct();
             if (productId != undefined) {
                 var currentProduct = productId;
             } else {
-                var currentProduct = $j('#currentProduct').val();
+                var currentProduct = $('#currentProduct').val();
             }
         } else {
-            var currentProduct = $j('#currentProduct').val();
+            var currentProduct = $('#currentProduct').val();
         }
         
-        $j.ajax({
+        $.ajax({
             type: 'POST',
             url: url,
             data: {currentProduct: currentProduct, qty: qty, postcode: postcode},
@@ -27,25 +27,25 @@
             success: (function(response) {
                 if (response) {
                     var html = '';
-                    $j.each(response, function(key, item) {
+                    $.each(response, function(key, item) {
                         html += '<dt id="dt-' + key + '">' + item.name + '</dt><dd><ul id="ul-' + key + '">';
-                        $j.each(item.methods, function(subkey, subitem) {
+                        $.each(item.methods, function(subkey, subitem) {
                             html += '<li id="' + subitem.id + '"><label>' + subitem.title + ': ' + subitem.price + '</label></li>';
                         });
                         html += '</ul>';
                     });
-                    $j('#quoteResultsBox').html(html).show();
-                    $j('#estimateQuoteSubmit').attr('disabled', false);
+                    $('#quoteResultsBox').html(html).show();
+                    $('#estimateQuoteSubmit').attr('disabled', false);
                 }
             }),
             error: (function() {
-               $j('#estimateQuoteSubmit').attr('disabled', false); 
+               $('#estimateQuoteSubmit').attr('disabled', false); 
             }),
         });
     }
     
     /* This function was originally published on Inchoo blog */
-    Product.Config.prototype.getIdOfSelectedProduct = function()
+    /*Product.Config.prototype.getIdOfSelectedProduct = function()
     {
         var existingProducts = new Object();
         
@@ -79,4 +79,4 @@
         if (sizeOfExistingProducts == 1) {
             return currentSimpleProductId;
         }
-    }
+    }*/

@@ -27,6 +27,7 @@
                 <declared_value>0</declared_value>
                 <showmethod>0</showmethod>
                 <estimate_quote_box>0</estimate_quote_box>
+                <use_mask>0</use_mask>
                 <load_css>0</load_css>
                 <load_jquery>0</load_jquery>
                 <correios_package_format>1</correios_package_format>

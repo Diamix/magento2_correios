@@ -27,11 +27,11 @@
                 <div class="input-group">
                     <label for="postcode" class="sr-only"><?php echo __('Postcode'); ?></label>
                     <input id="postcode" type="text" name="postcode" class="form-control input-text" placeholder="<?php echo __('Postcode'); ?>" />
-                    <?php /*if (Mage::helper('Diamix_Correios')->getConfigValue('use_mask') == 1) : ?>
+                    <?php if ($this->helper('Diamix\Correios\Helper\Data')->getConfigValue('use_mask') == 1) : ?>
                     <script type="text/javascript">
-                    new MaskedInput('#postcode', '99999-999');
+                        
                     </script>
-                    <?php endif; */ ?>
+                    <?php endif; ?>
                 </div>
                 <div id="buttonQuote" class="input-group">
                     <button type="button" id="estimateQuoteSubmit" title="<?php echo __('Quote'); ?>" class="button btn-quote" onclick="getQuote()">

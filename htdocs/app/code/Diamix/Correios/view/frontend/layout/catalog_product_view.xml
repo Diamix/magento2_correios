@@ -1,9 +1,29 @@
 <?xml version="1.0" ?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <head>
-        <css src="css/diamix_correios.css" />
-    </head>
     <body>
+        <!-- work around Magento 2 ifconfig limitation -->
+        <referenceContainer name="head.additional">
+			<block class="Diamix\Correios\Block\Product\Assets" name="diamix.correios.css" ifconfig="carriers/Diamix_Correios/load_css">
+                <arguments>
+                    <argument name="path" xsi:type="string">Diamix_Correios::css/diamix_correios.css</argument>
+                </arguments>
+            </block>
+            <block class="Diamix\Correios\Block\Product\Assets" name="diamix.correios.jquery" ifconfig="carriers/Diamix_Correios/load_jquery">
+                <arguments>
+                    <argument name="path" xsi:type="string">Diamix_Correios::js/jquery/lib/jquery-3.1.1.min.js</argument>
+                </arguments>
+            </block>
+            <block class="Diamix\Correios\Block\Product\Assets" name="diamix.correios.noconflict" ifconfig="carriers/Diamix_Correios/load_jquery">
+                <arguments>
+                    <argument name="path" xsi:type="string">Diamix_Correios::js/jquery/lib/noconflict.js</argument>
+                </arguments>
+            </block>
+            <block class="Diamix\Correios\Block\Product\Assets" name="diamix.correios.estimatequotebox" ifconfig="carriers/Diamix_Correios/estimate_quote_box">
+                <arguments>
+                    <argument name="path" xsi:type="string">Diamix_Correios::js/jquery/diamix_correios_quote.js</argument>
+                </arguments>
+            </block>
+		</referenceContainer>
         <referenceContainer name="product.info.main">
             <block class="Diamix\Correios\Block\Product\Quote" name="product.quote" template="Diamix_Correios::product.quote.phtml" />
         </referenceContainer>
