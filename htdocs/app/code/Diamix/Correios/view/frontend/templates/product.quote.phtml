@@ -14,6 +14,7 @@
  */
 ?>
 <?php if ($this->showBox()) : ?>
+<?php //if ($this->_coreRegistry->registry('product')) : $product = $this->_coreRegistry->registry('product'); endif; ?>
 <div id="estimateBox" class="estimate-box col-xs-12">
     <div class="widget">
         <div class="widget-header">
@@ -21,15 +22,15 @@
         </div>
         <div class="widget-content">
             <form id="estimateQuote" class="form-inline">
-                <input type="hidden" id="quoteUrl" name="quoteUrl" value="<?php //echo $this->getUrl('diamix_correios/quote'); ?>" />
-                <input type="hidden" id="productType" name="productType" value="<?php //echo $this->getProduct()->getTypeId(); ?>" />
-                <input type="hidden" id="currentProduct" name="currentProduct" value="<?php //echo $this->getProduct()->getId(); ?>" />
+                <input type="hidden" id="quoteUrl" name="quoteUrl" value="<?php echo $this->getUrl('quote/quote/index'); ?>" />
+                <input type="hidden" id="productType" name="productType" value="<?php echo $this->getCurrentProduct()->getTypeId(); ?>" />
+                <input type="hidden" id="currentProduct" name="currentProduct" value="<?php echo $this->defineProduct(); ?>" />
                 <div class="input-group">
                     <label for="postcode" class="sr-only"><?php echo __('Postcode'); ?></label>
                     <input id="postcode" type="text" name="postcode" class="form-control input-text" placeholder="<?php echo __('Postcode'); ?>" />
                     <?php if ($this->helper('Diamix\Correios\Helper\Data')->getConfigValue('use_mask') == 1) : ?>
                     <script type="text/javascript">
-                        
+                        $('#postcode').mask('99999-999');
                     </script>
                     <?php endif; ?>
                 </div>

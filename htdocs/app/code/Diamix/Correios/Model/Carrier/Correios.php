@@ -121,6 +121,9 @@ class Correios extends \Magento\Shipping\Model\Carrier\AbstractCarrier implement
      */
     public function collectRates(RateRequest $request)
     {
+        echo 'item<pre>';
+        var_dump($request->getData());
+        die;
         // double checking if this method is active
         if (!$this->getConfigFlag('active')) {
             return false;
@@ -197,12 +200,14 @@ class Correios extends \Magento\Shipping\Model\Carrier\AbstractCarrier implement
         
         // prepare package weight and verify it; this module works with kilos as standard weight unit
         $this->packageWeight = $request->getPackageWeight();
+        
         if ($this->helper->getConfigValue('weight_unit') != 'kg') {
             $this->packageWeight = $this->helper->changeWeightToKilos($this->packageWeight);
         }
+        
         $minWeight = $this->helper->getConfigValue('min_order_weight') ? $this->helper->getConfigValue('min_order_weight') : $this->helper->getConfigValue('gateway_limits/min_weight');
         $maxWeight = $this->helper->getConfigValue('max_order_weight') ? $this->helper->getConfigValue('max_order_weight') : $this->helper->getConfigValue('gateway_limits/max_weight');
-
+        
         if ($this->packageWeight < $minWeight || $this->packageWeight > $maxWeight) {
             return false;
         }

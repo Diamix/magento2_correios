@@ -66,13 +66,14 @@ class Estimate extends \Magento\Framework\View\Element\AbstractBlock
         $postcode = sprintf('%08d', $postcode);
         
         // get product object
-        $_product = $this->_productFactory->create()->load($productId);
+        $product = $this->_productFactory->create()->load($productId);
         
         // prepare quote
         $quote = $this->_quoteFactory->create();
         $quote->setStore($this->_storeManager->getStore());
-        $quote->addProduct($_product, $productQty);
-        $quote->getShippingAddress()->setCountryId($countryCode)->setPostcode($postcode);
+        $quote->addProduct($product, $productQty);
+        $quote->getShippingAddress()->setCountryId($countryCode);
+        $quote->getShippingAddress()->setPostcode($postcode);
         $quote->getShippingAddress()->setCollectShippingRates(true);
         $quote->getShippingAddress()->collectShippingRates();
         

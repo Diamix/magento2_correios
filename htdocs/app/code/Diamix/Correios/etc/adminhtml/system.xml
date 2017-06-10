@@ -218,7 +218,7 @@
                     <!--tooltip>Choose the attribute to be used to get product length</tooltip-->
                 </field>
                 <field id="tracking_heading" translate="label" sortOrder="700" showInDefault="1" showInWebsite="1">
-                    <label>Quotes Definitions</label>
+                    <label>Tracking</label>
                     <frontend_model>\Magento\Config\Block\System\Config\Form\Field\Heading</frontend_model>
                 </field>
                 <field id="tracking_source" translate="label" type="select" sortOrder="710" showInDefault="1" showInWebsite="1">

@@ -84,7 +84,7 @@ class Quote extends Template
      * 
      * Defines what is the product to be quoted
      * @return int
-     */    
+     */
     public function defineProduct()
     {
         // if configurable, get the first child ID
@@ -101,5 +101,16 @@ class Quote extends Template
             $productId = $this->product->getId();
         }
         return $productId;
-    }    
+    }
+    
+    /**
+     * getCurrentProduct
+     * 
+     * Returns current product
+     * @return Product
+     */
+    public function getCurrentProduct()
+    {
+        return $this->product;
+    }   
 }
