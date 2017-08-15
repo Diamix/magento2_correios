@@ -121,9 +121,6 @@ class Correios extends \Magento\Shipping\Model\Carrier\AbstractCarrier implement
      */
     public function collectRates(RateRequest $request)
     {
-        echo 'item<pre>';
-        var_dump($request->getData());
-        die;
         // double checking if this method is active
         if (!$this->getConfigFlag('active')) {
             return false;

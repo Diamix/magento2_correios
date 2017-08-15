@@ -4,6 +4,7 @@
  */
 namespace Diamix\Correios\Block\Product;
 
+use Braintree\Exception;
 use Diamix\Correios\Helper\Data;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\Framework\App\Config\ScopeConfigInterface;
@@ -87,18 +88,19 @@ class Quote extends Template
      */
     public function defineProduct()
     {
+        // get product ID
+        $productId = $this->product->getId();
+
         // if configurable, get the first child ID
         if ($this->product->getTypeId() == 'configurable') {
-            $childProducts = $this->configurable->getUsedProducts(null, $this->product);
-            
+            $childProducts = $this->product->getTypeInstance()->getUsedProducts($this->product);
+
             foreach ($childProducts as $child) {
                 $productId = $child->getId();
                 if ($productId) {
                     break;
                 }
             }
-        } else {// else, get the product ID
-            $productId = $this->product->getId();
         }
         return $productId;
     }
